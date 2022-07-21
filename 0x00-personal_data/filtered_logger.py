@@ -5,6 +5,9 @@ from typing import List
 import logging
 
 
+PII_FIELDS = ("name", "email", "phone", "ssn", "password")
+
+
 def filter_datum(
         fields: List[str],
         redaction: str,
@@ -12,10 +15,23 @@ def filter_datum(
         separator: str) -> str:
     """return the a string with hiddening password and DOB"""
     for field in fields:
-        message = re.sub(field + "=.*?" + separator,
-                         field + "=" + redaction + separator,
-                         message)
+        message = re.sub(
+                field + "=.*?" + separator,
+                field + "=" + redaction + separator,
+                message)
     return message
+
+
+def get_logger() -> logging.Logger:
+    """function that creates logger"""
+    log = logging.Logger('user_data')
+    log.setLevel(logging.INFO)
+    stream_handler = logging.StreamHandler()
+    stream_handler.setFormatter(formatter)
+    formatter = RedactingFormatter(PII_FIELDS)
+    log.propagate = False
+    log.addHandler(handler)
+    return logger
 
 
 class RedactingFormatter(logging.Formatter):
