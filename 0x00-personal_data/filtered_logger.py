@@ -66,3 +66,17 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
         database=os.getenv('PERSONAL_DATA_DB_NAME'))
 
     return connection
+
+
+def main():
+    """function read user logs info from db"""
+    db = get_db()
+    cur.execute("SELECT * FROM users;")
+    fields = [des[0] for des in cur.description]
+    logger = get_logger()
+    with db.cursor() as cur:
+        for row in cur:
+            str_row = ''.join(
+                    '{}={}; '.format(f, str(r))
+                    for r, f in zip(row, fields))
+            logger.info(str_row.strip())
