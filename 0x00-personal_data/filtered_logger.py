@@ -12,9 +12,9 @@ def filter_datum(
         separator: str) -> str:
     """return the a string with hiddening password and DOB"""
     for field in fields:
-        pattern = re.search(field + "=(.*)" + separator, message).group(1)
-        new_pattern = pattern.split(";")[0]
-        message = re.sub(new_pattern, redaction, message)
+        message = re.sub(field + "=.*?" + separator,
+                         field + "=" + redaction + separator,
+                         message)
     return message
 
 
