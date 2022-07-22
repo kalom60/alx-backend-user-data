@@ -80,3 +80,7 @@ def main():
                     '{}={}; '.format(f, str(r))
                     for r, f in zip(row, fields))
             logger.info(str_row.strip())
+
+
+if __name__ == '__main__':
+    main()
