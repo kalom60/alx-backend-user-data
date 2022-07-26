@@ -12,9 +12,12 @@ class Auth:
                 len(excluded_paths) == 0:
             return True
         endpoint = path.split('/')[3]
-        excluded_ep = excluded_paths.split('/')[3][:-1]
-        if excluded_ep not in endpoint:
-            return True
+        excluded_ep = []
+        for i in excluded_paths:
+            excluded_ep.append(i.split('/')[3][:-1])
+        for i in excluded_ep:
+            if i not in endpoint:
+                return True
         return False
 
     def authorization_header(self, request=None) -> str:
