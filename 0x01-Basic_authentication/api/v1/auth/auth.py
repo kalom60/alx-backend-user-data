@@ -8,6 +8,16 @@ class Auth:
     """Auth class"""
     def require_auth(self, path: str, excluded_paths: List[str]) -> bool:
         """retrun bool based on the path"""
+        if path:
+            if path[-1] == '/':
+                path = path[:-1]
+        if excluded_paths:
+            for i in range(len(excluded_paths)):
+                if excluded_paths[i][-1] == '/':
+                    excluded_paths[i] = excluded_paths[i][:-1]
+        if excluded_paths is None or path is None or\
+                len(excluded_paths) == 0 or path not in excluded_paths:
+            return True
         return False
 
     def authorization_header(self, request=None) -> str:
