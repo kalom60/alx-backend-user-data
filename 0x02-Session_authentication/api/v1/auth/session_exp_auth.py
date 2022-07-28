@@ -9,6 +9,7 @@ class SessionExpAuth(SessionAuth):
     """SessionAuth class with Expiration"""
     def __init__(self):
         """Initialize the class"""
+        super().__init__()
         try:
             self.session_duration = int(getenv('SESSION_DURATION', '0'))
         except ValueError:
