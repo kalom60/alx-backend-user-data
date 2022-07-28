@@ -2,6 +2,7 @@
 """script that creates Auth class"""
 from flask import request
 from typing import List, TypeVar
+from os import getenv
 
 
 class Auth:
@@ -29,3 +30,11 @@ class Auth:
     def current_user(self, request=None) -> TypeVar('User'):
         """method return None"""
         return None
+
+    def session_cookie(self, request=None):
+        """returns a cookie value from a request"""
+        if request is None:
+            return None
+        cookie_name = getenv('SESSION_NAME')
+        cookie_value = request.cookies.get(cookie_name)
+        return cookie_value
