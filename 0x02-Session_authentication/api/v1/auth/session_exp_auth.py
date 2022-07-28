@@ -10,8 +10,8 @@ class SessionExpAuth(SessionAuth):
     def __init__(self):
         """Initialize the class"""
         try:
-            self.session_duration = int(os.getenv('SESSION_DURATION', '0'))
-        except Exception:
+            self.session_duration = int(getenv('SESSION_DURATION', '0'))
+        except ValueError:
             self.session_duration = 0
 
     def create_session(self, user_id=None):
@@ -29,16 +29,15 @@ class SessionExpAuth(SessionAuth):
         """gets user id based on session id"""
         if session_id is None:
             return None
-        session_obj = SessionExpAuth.user_id_by_session_id.get(session_id)
-        if session_obj is None:
-            return None
-        if 'created_at' not in session_obj:
-            return None
-        if self.session_duration <= 0:
-            return session_obj.get('user_id')
-
-        session_span = timedelta(seconds=self.session_duration)
-        exp_time = session_obj.get('created_at') + session_span
-        if expiry_time < datetime.now():
-            return None
-        return session_obj.get('user_id')
+        if session_id in self.user_id_by_session_id:
+            session_obj = self.user_id_by_session_id[session_id]
+            if self.session_duration <= 0:
+                return session_obj['user_id']
+            if 'created_at' not in session_obj:
+                return None
+            current_time = datetime.now()
+            time_length = timedelta(seconds=self.session_duration)
+            exp_time = session_obj['created_at'] + time_length
+            if exp_time < current_time:
+                return None
+            return session_obj['user_id']
