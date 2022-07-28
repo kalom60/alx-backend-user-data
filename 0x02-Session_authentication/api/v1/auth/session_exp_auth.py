@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""session expiration"""
+"""session authentication expiration"""
 from api.v1.auth.session_auth import SessionAuth
 from os import getenv
 from datetime import datetime, timedelta
