@@ -17,7 +17,7 @@ class SessionExpAuth(SessionAuth):
     def create_session(self, user_id=None):
         """create a session for given user id"""
         sess_id = super().create_session(user_id)
-        if sess_id is not None:
+        if isinstance(sess_id, str):
             self.user_id_by_session_id[sess_id] = {
                     'user_id': user_id,
                     'created_at': datetime.now()
