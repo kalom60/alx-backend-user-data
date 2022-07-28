@@ -30,7 +30,7 @@ class SessionExpAuth(SessionAuth):
         """gets user id based on session id"""
         if session_id is None:
             return None
-        session_obj = self.user_id_by_session_id[session_id]
+        session_obj = self.user_id_by_session_id.get(session_id)
         if session_obj is None:
             return None
         if self.session_duration <= 0:
