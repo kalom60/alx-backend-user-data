@@ -32,14 +32,14 @@ class SessionExpAuth(SessionAuth):
                 self.user_id_for_session_id.get(session_id) is None:
             return None
         if session_id in self.user_id_by_session_id:
+            session_obj = self.user_id_by_session_id[session_id]
             if self.session_duration <= 0:
-                return self.user_id_by_session_id[session_id]['user_id']
-            if 'created_at' not in self.user_id_by_session_id[session_id]:
+                return session_obj['user_id']
+            if 'created_at' not in session_obj:
                 return None
             current_time = datetime.time()
             time_span = timedelta(seconds=self.session_duration)
-            exp_time = self.user_id_by_session_id[session_id]['created_at'] +\
-                time_span
+            exp_time = session_obj['created_at'] + time_span
             if exp_time < current_time:
                 return None
-            return self.user_id_by_session_id[session_id]['user_id']
+            return session_obj['user_id']
