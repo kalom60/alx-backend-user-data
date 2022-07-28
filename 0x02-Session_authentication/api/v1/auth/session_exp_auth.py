@@ -35,10 +35,10 @@ class SessionExpAuth(SessionAuth):
         if 'created_at' not in session_obj:
             return None
         if self.session_duration <= 0:
-            return session_dict.get('user_id')
+            return session_obj.get('user_id')
 
-        session_length = timedelta(seconds=self.session_duration)
-        expiry_time = session_obj.get('created_at') + session_length
+        session_span = timedelta(seconds=self.session_duration)
+        exp_time = session_obj.get('created_at') + session_span
         if expiry_time < datetime.now():
             return None
         return session_obj.get('user_id')
