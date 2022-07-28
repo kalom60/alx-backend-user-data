@@ -9,7 +9,6 @@ class SessionExpAuth(SessionAuth):
     """SessionAuth class with Expiration"""
     def __init__(self):
         """Initialize the class"""
-        super.__init__()
         try:
             self.session_duration = int(os.getenv('SESSION_DURATION', '0'))
         except Exception:
@@ -18,7 +17,7 @@ class SessionExpAuth(SessionAuth):
     def create_session(self, user_id=None):
         """create a session for given user id"""
         sess_id = super().create_session(user_id)
-        if sess_id not None:
+        if sess_id is not None:
             self.user_id_by_session_id[sess_id] = {
                     'user_id': user_id,
                     'created_at': datetime.now()
@@ -30,15 +29,16 @@ class SessionExpAuth(SessionAuth):
         """gets user id based on session id"""
         if session_id is None:
             return None
-        session_obj = self.user_id_by_session_id.get(session_id)
+        session_obj = SessionExpAuth.user_id_by_session_id.get(session_id)
         if session_obj is None:
             return None
-        if self.session_duration <= 0:
-            return session_obj['user_id']
         if 'created_at' not in session_obj:
             return None
-        session_span = timedelta(seconds=self.session_duration)
-        exp_time = session_obj['created_at'] + session_span
-        if exp_time < datetime.now():
+        if self.session_duration <= 0:
+            return session_dict.get('user_id')
+
+        session_length = timedelta(seconds=self.session_duration)
+        expiry_time = session_obj.get('created_at') + session_length
+        if expiry_time < datetime.now():
             return None
-        return session_obj['user_id']
+        return session_obj.get('user_id')
