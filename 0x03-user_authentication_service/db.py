@@ -40,10 +40,10 @@ class DB:
 
     def find_user_by(self, **kwargs: dict) -> User:
         """method to query a user based on a given input"""
-        for key in kwargs.keys():
-            if not hasattr(User, key):
-                raise InvalidRequestError()
-        user = self._session.query(User).filter_by(**kwargs).first()
+        try:
+            user = self._session.query(User).filter_by(**kwargs).first()
+        except Exception:
+            raise InvalidRequestError()
         if user:
             return user
         raise NoResultFound()
