@@ -50,11 +50,12 @@ class DB:
 
     def update_user(self, user_id: int, **kwargs: dict) -> None:
         """method to update attributes of a user"""
-        if self.find_user_by(id=user_id):
+        user = self.find_user_by(id=user_id)
+        if user:
             for key in kwargs.keys():
-                if not hasattr(User, key):
+                if not hasattr(user, key):
                     raise ValueError()
-                self._session.query(User).filter(User.id == user_id)\
+                self._session.query(User).filter(user.id == user_id)\
                     .update({key: kwargs[key]})
             self._session.commit()
         return None
