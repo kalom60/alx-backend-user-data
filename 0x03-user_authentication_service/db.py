@@ -39,7 +39,10 @@ class DB:
         return new_user
 
     def find_user_by(self, **kwargs: dict) -> User:
-        """method to query a user based on a given input"""
+        """
+        method to find a user by keys and args
+        and return the first filtered table
+        """
         if not kwargs:
             raise InvalidRequestError
         keys = User.__table__.columns.keys()
