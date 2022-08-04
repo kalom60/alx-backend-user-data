@@ -40,15 +40,15 @@ class DB:
 
     def find_user_by(self, **kwargs: dict) -> User:
         """method to query a user based on a given input"""
-        if not kwargs:
-            raise InvalidRequestError()
-        for key in kwargs.keys():
-            if not hasattr(User, key):
-                raise InvalidRequestError()
-        user = self._session.query(User).filter_by(**kwargs).first()
-        if user:
-            return user
-        raise NoResultFound()
+        if kwargs:
+            for key in kwargs.keys():
+                if key not in User.__table__.columns.keys():
+                    raise InvalidRequestError()
+            user = self._session.query(User).filter_by(**kwargs).first()
+            if user:
+                return user
+            raise NoResultFound()
+        return InvalidRequestError()
 
     def update_user(self, user_id: int, **kwargs: dict) -> None:
         """method to update attributes of a user"""
