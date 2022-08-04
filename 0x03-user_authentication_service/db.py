@@ -41,14 +41,15 @@ class DB:
     def find_user_by(self, **kwargs: dict) -> User:
         """method to query a user based on a given input"""
         if kwargs:
+            keys = User.__table__.columns.keys()
             for key in kwargs.keys():
-                if key not in User.__table__.columns.keys():
+                if key not in keys:
                     raise InvalidRequestError()
             user = self._session.query(User).filter_by(**kwargs).first()
-            if user:
-                return user
-            raise NoResultFound()
-        return InvalidRequestError()
+            if user is None:
+                raise NoResultFound()
+            return user
+        raise InvalidRequestError()
 
     def update_user(self, user_id: int, **kwargs: dict) -> None:
         """method to update attributes of a user"""
