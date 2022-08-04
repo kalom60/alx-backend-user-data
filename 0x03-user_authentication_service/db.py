@@ -40,6 +40,8 @@ class DB:
 
     def find_user_by(self, **kwargs: dict) -> User:
         """method to query a user based on a given input"""
+        if not kwargs:
+            raise InvalidRequestError()
         for key in kwargs.keys():
             if not hasattr(User, key):
                 raise InvalidRequestError()
